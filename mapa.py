@@ -360,7 +360,7 @@ if tabs == "Circuitos":
         ['Todas las Comunas'] + list(resultados2['comuna_id'].unique())
     )
     
-    tipo_capa = st.multiselect(
+    tipo_capa = st.selectbox(
         'Seleccione la capa de visualización',
         ['Mostrar Votos por Comuna', 'Mostrar Porcentaje LLA'],
         default=['Mostrar Votos por Comuna']
@@ -512,7 +512,7 @@ elif tabs == "Ballotage":
         ['Todas las Comunas'] + list(resultadoscom['Comuna_x'].unique())
     )
 
-    capa_seleccionada = st.multiselect(
+    capa_seleccionada = st.selectbox(
         'Seleccione la capa del gráfico',
         ['Diferencia % LLA', 'Votos LLA Ballotage'],
         default=['Diferencia % LLA']
