@@ -351,7 +351,7 @@ st.markdown(
     """
     <style>
     .stApp {
-        background-color: #E6E6FA;  /* Color de fondo violeta */
+        background-color: #9370DB;  /* Color de fondo violeta */
         padding: 20px;
     }
     </style>
@@ -362,7 +362,7 @@ st.markdown(
 st.title("Resultados Electorales")
 
 logo_url = "https://lalibertadavanza.com.ar/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fll-logo-simple-color.d63e982f.png&w=750&q=75"  # Reemplaza con la URL de tu logo
-st.image(logo_url, use_column_width='auto', output_format='PNG', caption="Logo", width=100)
+st.image(logo_url, use_column_width='auto', output_format='PNG', width=100)
 
 # Crear un selector de pestañas
 tabs = st.selectbox("Seleccione una pestaña", ["Circuitos", "Comunas", "Ballotage"])
