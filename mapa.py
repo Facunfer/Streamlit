@@ -370,16 +370,15 @@ tabs = st.selectbox("Seleccione una pestaña", ["Circuitos", "Comunas", "Ballota
 if tabs == "Circuitos":
     st.subheader("Circuitos")
 
-comuna_seleccionada = st.selectbox('Selecciona una Comuna', ['Todas las Comunas'] + resultados2['comuna_id'].unique().tolist())
+comunas_seleccionadas = st.multiselect('Selecciona Comunas', ['Todas las Comunas'] + resultados2['comuna_id'].unique().tolist())
 
 # Selector de tipo de capa
 tipo_capa = st.selectbox('Selecciona el tipo de capa', ['Votos por Circuito', 'Porcentaje por Circuito'])
 
-# Filtrar los resultados en función de la comuna seleccionada
-if comuna_seleccionada == "Todas las Comunas":
+if 'Todas las Comunas' in comunas_seleccionadas:
     resultados_filtrados = resultados2
 else:
-    resultados_filtrados = resultados2[resultados2['comuna_id'] == comuna_seleccionada]
+    resultados_filtrados = resultados2[resultados2['comuna_id'].isin(comunas_seleccionadas)]
 
 # Determinar la columna de color según el tipo de capa
 if 'Votos' in tipo_capa:
@@ -407,12 +406,14 @@ mapa_fig = px.choropleth_mapbox(
     color_continuous_scale=color_continuous_scale,
     range_color=(resultados_filtrados[color_column].min(), resultados_filtrados[color_column].max()),
     labels={color_column: legend_name},
-    title=f"{legend_name} - {comuna_seleccionada}",
+    title=f"{legend_name} - {', '.join(comunas_seleccionadas)}",
     mapbox_style="open-street-map",
     center={"lat": -34.6118, "lon": -58.3773},
     zoom=12,
     opacity=0.6
 )
+
+mapa_fig.update_coloraxes(showscale=False)
 
 mapa_fig.update_geos(fitbounds="locations", visible=False)
 mapa_fig.update_layout(
@@ -473,4 +474,4 @@ grafico_lineas_fig.add_hline(y=resultados_filtrados['%JXC'].mean(), line_dash="d
 grafico_lineas_fig.add_hline(y=resultados_filtrados['%UXP'].mean(), line_dash="dash", annotation_text="Promedio UXP", line_color="blue")
 
 grafico_lineas_fig.update_layout(title="Porcentajes de Votos por Partido", xaxis_title="Circuito", yaxis_title="Porcentaje")
-st.plotly_chart(grafico_lineas_fig)   
+st.plotly_chart(grafico_lineas_fig)
