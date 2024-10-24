@@ -7,10 +7,10 @@ import plotly.express as px
 import streamlit as st
 
 
-csv = pd.read_csv("https://raw.githubusercontent.com/Facunfer/Streamlit/refs/heads/main/df.csv", low_memory=False)
-csv.head()
+df = pd.read_csv("https://raw.githubusercontent.com/Facunfer/Streamlit/refs/heads/main/df.csv", low_memory=False)
 
-df = csv.loc[(csv['distrito_id'] == 1) & (csv['cargo_id'] == 1),['eleccion_tipo','seccion_nombre','circuito_nombre','mesa_id','mesa_electores','agrupacion_nombre','votos_tipo','votos_cantidad']]
+
+
 
 
 
@@ -205,9 +205,8 @@ geojson_merged
 
 resultados2["Circuito-Comuna"]= resultados2['circuito_nombre'] + ' - ' + resultados2['seccion_nombre']
 
-resultados10 = pd.read_csv("https://raw.githubusercontent.com/Facunfer/Streamlit/refs/heads/main/resultados11.csv", low_memory=False)
-resultados11 = resultados10.loc[(resultados10['distrito_id'] == 1) & (resultados10['cargo_id'] == 1),['eleccion_tipo','seccion_nombre','circuito_nombre','mesa_id','mesa_electores','agrupacion_nombre','votos_tipo','votos_cantidad']]
-resultados11
+resultados11 = pd.read_csv("https://raw.githubusercontent.com/Facunfer/Streamlit/refs/heads/main/resultados11.csv", low_memory=False)
+
 
 resultados11['circuito_nombre']=pd.to_numeric(resultados11['circuito_nombre'], errors='coerce')
 
