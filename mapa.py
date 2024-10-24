@@ -366,3 +366,111 @@ st.image(logo_url, use_column_width='auto', output_format='PNG', width=100)
 
 # Crear un selector de pestañas
 tabs = st.selectbox("Seleccione una pestaña", ["Circuitos", "Comunas", "Ballotage"])
+
+if tabs == "Circuitos":
+    st.subheader("Circuitos")
+
+comuna_seleccionada = st.selectbox('Selecciona una Comuna', ['Todas las Comunas'] + resultados2['comuna_id'].unique().tolist())
+
+# Selector de tipo de capa
+tipo_capa = st.selectbox('Selecciona el tipo de capa', ['Votos por Circuito', 'Porcentaje por Circuito'])
+
+# Filtrar los resultados en función de la comuna seleccionada
+if comuna_seleccionada == "Todas las Comunas":
+    resultados_filtrados = resultados2
+else:
+    resultados_filtrados = resultados2[resultados2['comuna_id'] == comuna_seleccionada]
+
+# Determinar la columna de color según el tipo de capa
+if 'Votos' in tipo_capa:
+    color_column = 'llavotos'
+    legend_name = 'Votos de LLA por Comuna'
+else:
+    color_column = '%LLA'
+    legend_name = 'Porcentaje de Votos LLA'
+
+color_continuous_scale = [
+    (0.0, "red"),
+    (0.25, "orange"),
+    (0.5, "yellow"),
+    (0.75, "lightgreen"),
+    (1.0, "green"),
+]
+
+# Crear el mapa
+mapa_fig = px.choropleth_mapbox(
+    resultados_filtrados,
+    geojson=geojson_merged,
+    locations='circuitomapa',
+    featureidkey="properties.circuitomapa",
+    color=color_column,
+    color_continuous_scale=color_continuous_scale,
+    range_color=(resultados_filtrados[color_column].min(), resultados_filtrados[color_column].max()),
+    labels={color_column: legend_name},
+    title=f"{legend_name} - {comuna_seleccionada}",
+    mapbox_style="open-street-map",
+    center={"lat": -34.6118, "lon": -58.3773},
+    zoom=12,
+    opacity=0.6
+)
+
+mapa_fig.update_geos(fitbounds="locations", visible=False)
+mapa_fig.update_layout(
+    mapbox_zoom=12,
+    mapbox_center={"lat": -34.6118, "lon": -58.3773},
+    margin={"r": 0, "t": 0, "l": 0, "b": 0},
+    uirevision='constant'
+)
+
+# Mostrar el mapa en Streamlit
+st.plotly_chart(mapa_fig)
+
+# Gráfico de votos totales
+grafico_votos_totales_fig = px.bar(
+    resultados_filtrados.sort_values(by='totvotos', ascending=False).head(20),
+    x='Circuito-Comuna',
+    y='totvotos',
+    title='Votos Totales por Circuito',
+    color_discrete_sequence=['#4B0082'],
+    template='plotly_white'
+)
+st.plotly_chart(grafico_votos_totales_fig)
+
+# Gráfico de votos LLA
+grafico_votos_lla_fig = px.bar(
+    resultados_filtrados.sort_values(by='llavotos', ascending=False).head(20),
+    x='Circuito-Comuna',
+    y='llavotos',
+    title='Votos LLA por Circuito',
+    color_discrete_sequence=['#4B0082'],
+    template='plotly_white'
+)
+st.plotly_chart(grafico_votos_lla_fig)
+
+# Gráfico de porcentaje LLA
+grafico_porcentaje_lla_fig = px.bar(
+    resultados_filtrados.sort_values(by='%LLA', ascending=False).head(20),
+    x='Circuito-Comuna',
+    y='%LLA',
+    title='Porcentaje de Votos LLA por Circuito',
+    color_discrete_sequence=['#4B0082'],
+    template='plotly_white'
+)
+st.plotly_chart(grafico_porcentaje_lla_fig)
+
+# Gráfico de líneas
+grafico_lineas_fig = go.Figure()
+
+grafico_lineas_fig.add_trace(go.Scatter(x=resultados_filtrados['Circuito-Comuna'], y=resultados_filtrados['%LLA'],
+                                        mode='lines+markers', name='%LLA', line=dict(color='violet')))
+grafico_lineas_fig.add_trace(go.Scatter(x=resultados_filtrados['Circuito-Comuna'], y=resultados_filtrados['%JXC'],
+                                        mode='lines+markers', name='%JXC', line=dict(color='yellow')))
+grafico_lineas_fig.add_trace(go.Scatter(x=resultados_filtrados['Circuito-Comuna'], y=resultados_filtrados['%UXP'],
+                                        mode='lines+markers', name='%UXP', line=dict(color='blue')))
+
+grafico_lineas_fig.add_hline(y=resultados_filtrados['%LLA'].mean(), line_dash="dash", annotation_text="Promedio LLA", line_color="violet")
+grafico_lineas_fig.add_hline(y=resultados_filtrados['%JXC'].mean(), line_dash="dash", annotation_text="Promedio JXC", line_color="yellow")
+grafico_lineas_fig.add_hline(y=resultados_filtrados['%UXP'].mean(), line_dash="dash", annotation_text="Promedio UXP", line_color="blue")
+
+grafico_lineas_fig.update_layout(title="Porcentajes de Votos por Partido", xaxis_title="Circuito", yaxis_title="Porcentaje")
+st.plotly_chart(grafico_lineas_fig)   
