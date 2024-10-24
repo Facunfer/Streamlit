@@ -7,10 +7,30 @@ import plotly.express as px
 import streamlit as st
 
 
-csv = pd.read_csv("C:/Users/usuario/Downloads/ResultadoElectorales_2023_Generales.csv", low_memory=False)
-csv.head()
+uploaded_file = st.file_uploader("C:/Users/usuario/Downloads/ResultadoElectorales_2023_Generales.csv", type="csv")
 
-df = csv.loc[(csv['distrito_id'] == 1) & (csv['cargo_id'] == 1),['eleccion_tipo','seccion_nombre','circuito_nombre','mesa_id','mesa_electores','agrupacion_nombre','votos_tipo','votos_cantidad']]
+# Verifica si el archivo ha sido subido
+if uploaded_file is not None:
+    # Leer el archivo CSV subido
+    csv = pd.read_csv(uploaded_file, low_memory=False)
+    
+    # Muestra los primeros registros del CSV
+    st.write("Primeros registros del CSV:")
+    st.write(csv.head())
+
+    # Filtrar el DataFrame como en tu código original
+    df = csv.loc[
+        (csv['distrito_id'] == 1) & (csv['cargo_id'] == 1),
+        ['eleccion_tipo', 'seccion_nombre', 'circuito_nombre', 'mesa_id', 'mesa_electores', 'agrupacion_nombre', 'votos_tipo', 'votos_cantidad']
+    ]
+    
+    # Muestra el DataFrame filtrado en la aplicación Streamlit
+    st.write("Datos filtrados:")
+    st.write(df)
+
+else:
+    st.warning("Por favor, sube un archivo CSV para continuar.")
+
 
 
 
