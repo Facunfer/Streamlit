@@ -40,9 +40,7 @@ sorted2 = llaxvoto_sorted[::-1]
 joxcvotossorted = jxcxvoto.sort_values(ascending=False)
 sorted3 = joxcvotossorted[::-1]
 
-llaxvoto
-jxcxvoto
-comunaxvoto
+
 
 UXP = df.loc[df['agrupacion_nombre'] == 'UNION POR LA PATRIA', ['seccion_nombre', 'agrupacion_nombre', 'votos_cantidad']]
 uxpxvoto = UXP.groupby('seccion_nombre')['votos_cantidad'].sum().reindex(comunaxvoto.index, fill_value=0)
@@ -65,13 +63,13 @@ PROMEDIOJXC = resultados["%JXC"].mean()
 PROMEDIOUXP = resultados["%UXP"].mean()
 
 
-resultados
+
 total_votos_lla = resultados['llaxvoto'].sum()
 resultados["Cuanto Aporto LLA"] = resultados["llaxvoto"] / total_votos_lla * 100
 resultados['comuna_id'] = resultados['seccion_nombre'].str.extract('(\d+)').astype(int)
-resultados
 
-## geojson_url = "https://cdn.buenosaires.gob.ar/datosabiertos/datasets/ministerio-de-educacion/comunas/comunas.geojson"
+
+
 
 
 response = {
@@ -191,7 +189,7 @@ def agregar(comuna_id):
 resultados2['comuna_id'] = resultados2['comuna_id'].apply(agregar)
 
 
-resultados2
+
 
 geojson="https://raw.githubusercontent.com/tartagalensis/circuitos_electorales_AR/main/geojson/CABA.geojson"
 response = requests.get(geojson)
@@ -258,7 +256,7 @@ def ganador (generalesmesa):
       return "UxP"
 
 generalesmesa["ganador generales"] = generalesmesa.apply(ganador, axis=1)
-generalesmesa
+
 # df de resultados por mesa en las generales
 
 
@@ -294,7 +292,7 @@ def ganador1 (ballotage):
       return "UXP"
 
 ballotage["ganador ballotage"] = ballotage.apply(ganador1, axis=1)
-ballotage
+
 
 
 # normalizo circuitos
@@ -309,7 +307,7 @@ resultadoscom['DiferenciavotosUXP'] = resultadoscom['uxpvotosbal'] - resultadosc
 resultadoscom['Diferencia%UXP'] = (resultadoscom['uxpvotosbal'] - resultadoscom['uxpvotosgen'])/resultadoscom["uxpvotosgen"] * 100
 resultadoscom['transferencia_LLAvsJXC'] = resultadoscom['DiferenciavotosLLA'] / resultadoscom['jxcvotosgen']
 resultadoscom['transferencia_UXPvsJXC'] = resultadoscom['DiferenciavotosUXP'] / resultadoscom['jxcvotosgen']
-resultadoscom.info()
+
 
 resultadoscom["Circuito-Comuna"]= resultadoscom['circuito_nombre'] + ' - ' + resultadoscom['Comuna_x']
 
@@ -323,7 +321,7 @@ def agregar_ceros(circuito_nombre):
         return f'00{circuito_nombre}'
 
 resultadoscom['circuitomapa'] = resultadoscom['circuito_nombre'].apply(agregar_ceros)
-resultadoscom
+
 
 
 color_continuous_scale = [
@@ -349,8 +347,7 @@ mapa_fig_comunas12 = px.choropleth_mapbox(
        )
 
 
-mapa_fig_comunas12
-resultadoscom
+
 
 st.title("Resultados Electorales")
 st.markdown("## Seleccione una vista")
