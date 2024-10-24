@@ -7,29 +7,10 @@ import plotly.express as px
 import streamlit as st
 
 
-uploaded_file = st.file_uploader("C:/Users/usuario/Downloads/ResultadoElectorales_2023_Generales.csv", type="csv")
+csv = pd.read_csv("C:\Users\usuario\Downloads\df (1).csv", low_memory=False)
+csv.head()
 
-# Verifica si el archivo ha sido subido
-if uploaded_file is not None:
-    # Leer el archivo CSV subido
-    csv = pd.read_csv(uploaded_file, low_memory=False)
-    
-    # Muestra los primeros registros del CSV
-    st.write("Primeros registros del CSV:")
-    st.write(csv.head())
-
-    # Filtrar el DataFrame como en tu código original
-    df = csv.loc[
-        (csv['distrito_id'] == 1) & (csv['cargo_id'] == 1),
-        ['eleccion_tipo', 'seccion_nombre', 'circuito_nombre', 'mesa_id', 'mesa_electores', 'agrupacion_nombre', 'votos_tipo', 'votos_cantidad']
-    ]
-    
-    # Muestra el DataFrame filtrado en la aplicación Streamlit
-    st.write("Datos filtrados:")
-    st.write(df)
-
-else:
-    st.warning("Por favor, sube un archivo CSV para continuar.")
+df = csv.loc[(csv['distrito_id'] == 1) & (csv['cargo_id'] == 1),['eleccion_tipo','seccion_nombre','circuito_nombre','mesa_id','mesa_electores','agrupacion_nombre','votos_tipo','votos_cantidad']]
 
 
 
@@ -224,7 +205,7 @@ geojson_merged
 
 resultados2["Circuito-Comuna"]= resultados2['circuito_nombre'] + ' - ' + resultados2['seccion_nombre']
 
-resultados10 = pd.read_csv("C:/Users/usuario/Downloads/presentacionDeResultados (3).csv", low_memory=False)
+resultados10 = pd.read_csv("C:\Users\usuario\Downloads\resultados11.csv", low_memory=False)
 resultados11 = resultados10.loc[(resultados10['distrito_id'] == 1) & (resultados10['cargo_id'] == 1),['eleccion_tipo','seccion_nombre','circuito_nombre','mesa_id','mesa_electores','agrupacion_nombre','votos_tipo','votos_cantidad']]
 resultados11
 
