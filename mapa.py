@@ -476,8 +476,8 @@ grafico_lineas_fig.add_hline(y=resultados_filtrados['%UXP'].mean(), line_dash="d
 grafico_lineas_fig.update_layout(title="Porcentajes de Votos por Partido", xaxis_title="Circuito", yaxis_title="Porcentaje")
 st.plotly_chart(grafico_lineas_fig)
 
-if tabs == "Comunas":
- st.subheader("Comunas")
+elif tabs == "Comunas":
+st.subheader("Comunas")
 
 tipo_visualizacion = st.selectbox("Selecciona el tipo de visualización:", ['Votos', 'Porcentaje'])
 
