@@ -194,12 +194,11 @@ resultados2['comuna_id'] = resultados2['comuna_id'].apply(agregar)
 geojson="https://raw.githubusercontent.com/tartagalensis/circuitos_electorales_AR/main/geojson/CABA.geojson"
 response = requests.get(geojson)
 geojson_data1 = response.json()
-geojson_data1
+
 gdf = gpd.GeoDataFrame.from_features(geojson_data1['features'])
-gdf['circuito']
 merged_data = gdf.merge(resultados2, left_on='circuito', right_on='circuitomapa')
 geojson_merged = json.loads(merged_data.to_json())
-geojson_merged
+
 
 resultados2["Circuito-Comuna"]= resultados2['circuito_nombre'] + ' - ' + resultados2['seccion_nombre']
 
