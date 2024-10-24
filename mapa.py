@@ -7,7 +7,7 @@ import plotly.express as px
 import streamlit as st
 
 
-csv = pd.read_csv("C:/Users/usuario/Downloads/ResultadoElectorales_2023_Generales.csv", low_memory=False)
+csv = pd.read_csv("C:\Users\usuario\Downloads\ResultadoElectorales_2023_Generales.csv", low_memory=False)
 csv.head()
 
 df = csv.loc[(csv['distrito_id'] == 1) & (csv['cargo_id'] == 1),['eleccion_tipo','seccion_nombre','circuito_nombre','mesa_id','mesa_electores','agrupacion_nombre','votos_tipo','votos_cantidad']]
