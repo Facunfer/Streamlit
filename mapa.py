@@ -534,7 +534,6 @@ elif tabs == "Comunas":
  st.plotly_chart(grafico_votos_comuna_fig)
 
     # Gráfico de comparación de votos LLA
- lla = resultados.loc[resultados['agrupacion_nombre'] == 'LA LIBERTAD AVANZA', ['seccion_nombre', 'agrupacion_nombre', 'votos_cantidad']]
  llaxvoto = lla.groupby('seccion_nombre')['votos_cantidad'].sum().reindex(comunaxvoto.index, fill_value=0)
  otras_llaxvoto = comunaxvoto - llaxvoto
 
@@ -554,7 +553,6 @@ elif tabs == "Comunas":
  st.plotly_chart(grafico_lla_fig)
 
     # Gráfico de comparación de votos JXC
- jxc = resultados.loc[resultados['agrupacion_nombre'] == 'JUNTOS POR EL CAMBIO', ['seccion_nombre', 'agrupacion_nombre', 'votos_cantidad']]
  jxcxvoto = jxc.groupby('seccion_nombre')['votos_cantidad'].sum().reindex(comunaxvoto.index, fill_value=0)
  otras_jxcxvoto = comunaxvoto - jxcxvoto
 
