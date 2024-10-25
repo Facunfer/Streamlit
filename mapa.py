@@ -476,21 +476,21 @@ if tabs == "Circuitos":
     grafico_lineas_fig.update_layout(title="Porcentajes de Votos por Partido", xaxis_title="Circuito", yaxis_title="Porcentaje")
     st.plotly_chart(grafico_lineas_fig)
 
-    if tabs == "Comunas":
-     st.subheader("Comunas")
+elif tabs == "Comunas":
+ st.subheader("Comunas")
 
          # Selector para el tipo de visualización
-    tipo_visualizacion = st.selectbox('Selecciona el tipo de visualización', ['Votos LLA por Comuna', 'Porcentaje LLA por Comuna'])
+ tipo_visualizacion = st.selectbox('Selecciona el tipo de visualización', ['Votos LLA por Comuna', 'Porcentaje LLA por Comuna'])
 
-    if tipo_visualizacion == 'Votos LLA por Comuna':
+ if tipo_visualizacion == 'Votos LLA por Comuna':
         color_column = 'llaxvoto'
         legend_name = 'Votos de LLA por Comuna'
-    else:
+ else:
         color_column = '%LLA'
         legend_name = 'Porcentaje de LLA por Comuna'
 
     # Escala de color
-    color_continuous_scale = [
+ color_continuous_scale = [
         (0.0, "red"),
         (0.25, "orange"),
         (0.5, "yellow"),
@@ -499,7 +499,7 @@ if tabs == "Circuitos":
     ]
 
     # Mapa coroplético
-    mapa_fig_comunas = px.choropleth_mapbox(
+ mapa_fig_comunas = px.choropleth_mapbox(
         resultados,
         geojson=geojson_data,
         locations='comuna_id',
@@ -515,35 +515,35 @@ if tabs == "Circuitos":
         title=f"{legend_name} por Comuna"
     )
 
-    mapa_fig_comunas.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
+ mapa_fig_comunas.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
 
     # Mostrar el mapa en Streamlit
-    st.plotly_chart(mapa_fig_comunas)
+ st.plotly_chart(mapa_fig_comunas)
 
     # Gráfico de votos por comuna
-    comunaxvoto = resultados.groupby('seccion_nombre')['votos_cantidad'].sum().sort_values(ascending=False)
-    grafico_votos_comuna_fig = go.Figure(data=[go.Bar(x=comunaxvoto.index, y=comunaxvoto.values, marker_color='violet')])
+ comunaxvoto = resultados.groupby('seccion_nombre')['votos_cantidad'].sum().sort_values(ascending=False)
+ grafico_votos_comuna_fig = go.Figure(data=[go.Bar(x=comunaxvoto.index, y=comunaxvoto.values,  marker_color='violet')])
 
-    grafico_votos_comuna_fig.update_layout(
+ grafico_votos_comuna_fig.update_layout(
         title='Comparación de votos por comuna',
         xaxis_title='Comuna',
         yaxis_title='Votantes',
         xaxis_tickangle=-90
     )
 
-    st.plotly_chart(grafico_votos_comuna_fig)
+ st.plotly_chart(grafico_votos_comuna_fig)
 
     # Gráfico de comparación de votos LLA
-    lla = resultados.loc[resultados['agrupacion_nombre'] == 'LA LIBERTAD AVANZA', ['seccion_nombre', 'agrupacion_nombre', 'votos_cantidad']]
-    llaxvoto = lla.groupby('seccion_nombre')['votos_cantidad'].sum().reindex(comunaxvoto.index, fill_value=0)
-    otras_llaxvoto = comunaxvoto - llaxvoto
+ lla = resultados.loc[resultados['agrupacion_nombre'] == 'LA LIBERTAD AVANZA', ['seccion_nombre', 'agrupacion_nombre', 'votos_cantidad']]
+ llaxvoto = lla.groupby('seccion_nombre')['votos_cantidad'].sum().reindex(comunaxvoto.index, fill_value=0)
+ otras_llaxvoto = comunaxvoto - llaxvoto
 
-    grafico_lla_fig = go.Figure()
-    grafico_lla_fig.add_trace(go.Bar(x=comunaxvoto.index, y=llaxvoto, name='Votos LLA', marker_color='violet'))
-    grafico_lla_fig.add_trace(go.Bar(x=comunaxvoto.index, y=otras_llaxvoto, name='Otros Votos (LLA)', marker_color='lightblue'))
-    grafico_lla_fig.add_trace(go.Scatter(x=comunaxvoto.index, y=llaxvoto, mode='lines+markers', name='Tendencia LLA', line=dict(color='violet')))
+ grafico_lla_fig = go.Figure()
+ grafico_lla_fig.add_trace(go.Bar(x=comunaxvoto.index, y=llaxvoto, name='Votos LLA',  marker_color='violet'))
+ grafico_lla_fig.add_trace(go.Bar(x=comunaxvoto.index, y=otras_llaxvoto, name='Otros Votos (LLA)', marker_color='lightblue'))
+ grafico_lla_fig.add_trace(go.Scatter(x=comunaxvoto.index, y=llaxvoto, mode='lines+markers', name='Tendencia LLA', line=dict(color='violet')))
 
-    grafico_lla_fig.update_layout(
+ grafico_lla_fig.update_layout(
         title='Comparación de votos por comuna - LLA',
         barmode='stack',
         xaxis_title='Comuna',
@@ -551,19 +551,19 @@ if tabs == "Circuitos":
         xaxis_tickangle=-90
     )
 
-    st.plotly_chart(grafico_lla_fig)
+ st.plotly_chart(grafico_lla_fig)
 
     # Gráfico de comparación de votos JXC
-    jxc = resultados.loc[resultados['agrupacion_nombre'] == 'JUNTOS POR EL CAMBIO', ['seccion_nombre', 'agrupacion_nombre', 'votos_cantidad']]
-    jxcxvoto = jxc.groupby('seccion_nombre')['votos_cantidad'].sum().reindex(comunaxvoto.index, fill_value=0)
-    otras_jxcxvoto = comunaxvoto - jxcxvoto
+ jxc = resultados.loc[resultados['agrupacion_nombre'] == 'JUNTOS POR EL CAMBIO', ['seccion_nombre', 'agrupacion_nombre', 'votos_cantidad']]
+ jxcxvoto = jxc.groupby('seccion_nombre')['votos_cantidad'].sum().reindex(comunaxvoto.index, fill_value=0)
+ otras_jxcxvoto = comunaxvoto - jxcxvoto
 
-    grafico_jxc_fig = go.Figure()
-    grafico_jxc_fig.add_trace(go.Bar(x=comunaxvoto.index, y=jxcxvoto, name='Votos JXC', marker_color='yellow'))
-    grafico_jxc_fig.add_trace(go.Bar(x=comunaxvoto.index, y=otras_jxcxvoto, name='Otros Votos (JXC)', marker_color='lightblue'))
-    grafico_jxc_fig.add_trace(go.Scatter(x=comunaxvoto.index, y=jxcxvoto, mode='lines+markers', name='Tendencia JXC', line=dict(color='yellow')))
+ grafico_jxc_fig = go.Figure()
+ grafico_jxc_fig.add_trace(go.Bar(x=comunaxvoto.index, y=jxcxvoto, name='Votos JXC', marker_color='yellow'))
+ grafico_jxc_fig.add_trace(go.Bar(x=comunaxvoto.index, y=otras_jxcxvoto, name='Otros Votos (JXC)', marker_color='lightblue'))
+ grafico_jxc_fig.add_trace(go.Scatter(x=comunaxvoto.index, y=jxcxvoto, mode='lines+markers', name='Tendencia JXC', line=dict(color='yellow')))
 
-    grafico_jxc_fig.update_layout(
+ grafico_jxc_fig.update_layout(
         title='Comparación de votos por comuna - JXC',
         barmode='stack',
         xaxis_title='Comuna',
@@ -571,59 +571,59 @@ if tabs == "Circuitos":
         xaxis_tickangle=-90
     )
 
-    st.plotly_chart(grafico_jxc_fig)
+ st.plotly_chart(grafico_jxc_fig)
 
     # Gráfico horizontal de votos LLA por comuna
-    llaxvoto_sorted = llaxvoto.sort_values(ascending=False)[::-1]
-    grafico_horizontal_lla = go.Figure(go.Bar(x=llaxvoto_sorted.values, y=llaxvoto_sorted.index, orientation='h', marker_color='violet'))
+ llaxvoto_sorted = llaxvoto.sort_values(ascending=False)[::-1]
+ grafico_horizontal_lla = go.Figure(go.Bar(x=llaxvoto_sorted.values, y=llaxvoto_sorted.index, orientation='h', marker_color='violet'))
 
-    grafico_horizontal_lla.update_layout(
+ grafico_horizontal_lla.update_layout(
         title="Votos LLA por Comuna",
         xaxis_title="Votos",
         yaxis_title="Comuna"
     )
 
-    st.plotly_chart(grafico_horizontal_lla)
+ st.plotly_chart(grafico_horizontal_lla)
 
     # Gráfico horizontal de votos JXC por comuna
-    jxcxvoto_sorted = jxcxvoto.sort_values(ascending=False)[::-1]
-    grafico_horizontal_jxc = go.Figure(go.Bar(x=jxcxvoto_sorted.values, y=jxcxvoto_sorted.index, orientation='h', marker_color='yellow'))
+ jxcxvoto_sorted = jxcxvoto.sort_values(ascending=False)[::-1]
+ grafico_horizontal_jxc = go.Figure(go.Bar(x=jxcxvoto_sorted.values, y=jxcxvoto_sorted.index, orientation='h', marker_color='yellow'))
 
-    grafico_horizontal_jxc.update_layout(
+ grafico_horizontal_jxc.update_layout(
         title="Votos JXC por Comuna",
         xaxis_title="Votos",
         yaxis_title="Comuna"
     )
 
-    st.plotly_chart(grafico_horizontal_jxc)
+ st.plotly_chart(grafico_horizontal_jxc)
 
     # Gráfico de tres líneas: comparación entre LLA, JXC y UXP
-    resultados["%LLA"] = resultados["llaxvoto"] / resultados["comunaxvoto"] * 100
-    resultados["%JXC"] = resultados["jxcxvoto"] / resultados["comunaxvoto"] * 100
-    resultados["%UXP"] = resultados["uxpxvoto"] / resultados["comunaxvoto"] * 100
+ resultados["%LLA"] = resultados["llaxvoto"] / resultados["comunaxvoto"] * 100
+ resultados["%JXC"] = resultados["jxcxvoto"] / resultados["comunaxvoto"] * 100
+ resultados["%UXP"] = resultados["uxpxvoto"] / resultados["comunaxvoto"] * 100
 
-    PROMEDIOLLA = resultados["%LLA"].mean()
-    PROMEDIOJXC = resultados["%JXC"].mean()
-    PROMEDIOUXP = resultados["%UXP"].mean()
+ PROMEDIOLLA = resultados["%LLA"].mean()
+ PROMEDIOJXC = resultados["%JXC"].mean()
+ PROMEDIOUXP = resultados["%UXP"].mean()
 
-    fig_tres_lineas = make_subplots(rows=3, cols=1, shared_xaxes=True, subplot_titles=('%LLA vs %JXC', '%LLA vs %UXP', '%LLA vs %JXC & %UXP'))
+ fig_tres_lineas = make_subplots(rows=3, cols=1, shared_xaxes=True, subplot_titles=('%LLA vs %JXC', '%LLA vs %UXP', '%LLA vs %JXC & %UXP'))
 
-    fig_tres_lineas.add_trace(go.Scatter(x=resultados['seccion_nombre'], y=resultados['%LLA'], mode='lines+markers', name='%LLA', line=dict(color='violet')), row=1, col=1)
-    fig_tres_lineas.add_trace(go.Scatter(x=resultados['seccion_nombre'], y=resultados['%JXC'], mode='lines+markers', name='%JXC', line=dict(color='yellow')), row=1, col=1)
-    fig_tres_lineas.add_hline(y=PROMEDIOLLA, line_dash="dash", annotation_text="Promedio LLA", line_color="violet", row=1, col=1)
-    fig_tres_lineas.add_hline(y=PROMEDIOJXC, line_dash="dash", annotation_text="Promedio JXC", line_color="yellow", row=1, col=1)
+ fig_tres_lineas.add_trace(go.Scatter(x=resultados['seccion_nombre'], y=resultados['%LLA'], mode='lines+markers', name='%LLA', line=dict(color='violet')), row=1, col=1)
+ fig_tres_lineas.add_trace(go.Scatter(x=resultados['seccion_nombre'], y=resultados['%JXC'], mode='lines+markers', name='%JXC', line=dict(color='yellow')), row=1, col=1)
+ fig_tres_lineas.add_hline(y=PROMEDIOLLA, line_dash="dash", annotation_text="Promedio LLA", line_color="violet", row=1, col=1)
+ fig_tres_lineas.add_hline(y=PROMEDIOJXC, line_dash="dash", annotation_text="Promedio JXC", line_color="yellow", row=1, col=1)
 
-    fig_tres_lineas.add_trace(go.Scatter(x=resultados['seccion_nombre'], y=resultados['%LLA'], mode='lines+markers', name='%LLA', line=dict(color='violet')), row=2, col=1)
-    fig_tres_lineas.add_trace(go.Scatter(x=resultados['seccion_nombre'], y=resultados['%UXP'], mode='lines+markers', name='%UXP', line=dict(color='blue')), row=2, col=1)
-    fig_tres_lineas.add_hline(y=PROMEDIOLLA, line_dash="dash", annotation_text="Promedio LLA", line_color="violet", row=2, col=1)
-    fig_tres_lineas.add_hline(y=PROMEDIOUXP, line_dash="dash", annotation_text="Promedio UXP", line_color="blue", row=2, col=1)
+ fig_tres_lineas.add_trace(go.Scatter(x=resultados['seccion_nombre'], y=resultados['%LLA'], mode='lines+markers', name='%LLA', line=dict(color='violet')), row=2, col=1)
+ fig_tres_lineas.add_trace(go.Scatter(x=resultados['seccion_nombre'], y=resultados['%UXP'], mode='lines+markers', name='%UXP', line=dict(color='blue')), row=2, col=1)
+ fig_tres_lineas.add_hline(y=PROMEDIOLLA, line_dash="dash", annotation_text="Promedio LLA", line_color="violet", row=2, col=1)
+ fig_tres_lineas.add_hline(y=PROMEDIOUXP, line_dash="dash", annotation_text="Promedio UXP", line_color="blue", row=2, col=1)
 
-    fig_tres_lineas.add_trace(go.Scatter(x=resultados['seccion_nombre'], y=resultados['%LLA'], mode='lines+markers', name='%LLA', line=dict(color='violet')), row=3, col=1)
-    fig_tres_lineas.add_trace(go.Scatter(x=resultados['seccion_nombre'], y=resultados['%JXC'], mode='lines+markers', name='%JXC', line=dict(color='yellow')), row=3, col=1)
-    fig_tres_lineas.add_trace(go.Scatter(x=resultados['seccion_nombre'], y=resultados['%UXP'], mode='lines+markers', name='%UXP', line=dict(color='blue')), row=3, col=1)
-    fig_tres_lineas.add_hline(y=PROMEDIOLLA, line_dash="dash", annotation_text="Promedio LLA", line_color="violet", row=3, col=1)
-    fig_tres_lineas.add_hline(y=PROMEDIOJXC, line_dash="dash", annotation_text="Promedio JXC", line_color="yellow", row=3, col=1)
-    fig_tres_lineas.add_hline(y=PROMEDIOUXP, line_dash="dash", annotation_text="Promedio UXP", line_color="blue", row=3, col=1)
+ fig_tres_lineas.add_trace(go.Scatter(x=resultados['seccion_nombre'], y=resultados['%LLA'], mode='lines+markers', name='%LLA', line=dict(color='violet')), row=3, col=1)
+ fig_tres_lineas.add_trace(go.Scatter(x=resultados['seccion_nombre'], y=resultados['%JXC'], mode='lines+markers', name='%JXC', line=dict(color='yellow')), row=3, col=1)
+ fig_tres_lineas.add_trace(go.Scatter(x=resultados['seccion_nombre'], y=resultados['%UXP'], mode='lines+markers', name='%UXP', line=dict(color='blue')), row=3, col=1)
+ fig_tres_lineas.add_hline(y=PROMEDIOLLA, line_dash="dash", annotation_text="Promedio LLA", line_color="violet", row=3, col=1)
+ fig_tres_lineas.add_hline(y=PROMEDIOJXC, line_dash="dash", annotation_text="Promedio JXC", line_color="yellow", row=3, col=1)
+ fig_tres_lineas.add_hline(y=PROMEDIOUXP, line_dash="dash", annotation_text="Promedio UXP", line_color="blue", row=3, col=1)
 
-    fig_tres_lineas.update_layout(height=900, title="Comparación de Porcentajes por Sección")
-    st.plotly_chart(fig_tres_lineas)
+ fig_tres_lineas.update_layout(height=900, title="Comparación de Porcentajes por Sección")
+ st.plotly_chart(fig_tres_lineas)
