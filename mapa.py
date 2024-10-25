@@ -5,6 +5,7 @@ import geopandas as gpd
 import json
 import plotly.express as px
 import streamlit as st
+from plotly.subplots import make_subplots
 
 
 df = pd.read_csv("https://raw.githubusercontent.com/Facunfer/Streamlit/refs/heads/main/df.csv", low_memory=False)
