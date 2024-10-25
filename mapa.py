@@ -38,8 +38,8 @@ otras_jxcxvoto = comunaxvoto - jxcxvoto
 llaxvoto_sorted = llaxvoto.sort_values(ascending=False)
 sorted2 = llaxvoto_sorted[::-1]
 
-joxcvotossorted = jxcxvoto.sort_values(ascending=False)
-sorted3 = joxcvotossorted[::-1]
+jxcxvoto_sorted = jxcxvoto.sort_values(ascending=False)
+sorted3 = jxcxvoto_sorted[::-1]
 
 
 
@@ -572,7 +572,6 @@ elif tabs == "Comunas":
  st.plotly_chart(grafico_jxc_fig)
 
     # Gráfico horizontal de votos LLA por comuna
- llaxvoto_sorted = llaxvoto.sort_values(ascending=False)[::-1]
  grafico_horizontal_lla = go.Figure(go.Bar(x=llaxvoto_sorted.values, y=llaxvoto_sorted.index, orientation='h', marker_color='violet'))
 
  grafico_horizontal_lla.update_layout(
@@ -584,7 +583,6 @@ elif tabs == "Comunas":
  st.plotly_chart(grafico_horizontal_lla)
 
     # Gráfico horizontal de votos JXC por comuna
- jxcxvoto_sorted = jxcxvoto.sort_values(ascending=False)[::-1]
  grafico_horizontal_jxc = go.Figure(go.Bar(x=jxcxvoto_sorted.values, y=jxcxvoto_sorted.index, orientation='h', marker_color='yellow'))
 
  grafico_horizontal_jxc.update_layout(
