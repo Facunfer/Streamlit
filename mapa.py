@@ -514,14 +514,14 @@ elif tabs == "Comunas":
         opacity=0.6,
         title=f"{legend_name} por Comuna"
     )
-
+ mapa_fig_comunas.update_coloraxes(showscale=False)
  mapa_fig_comunas.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
 
     # Mostrar el mapa en Streamlit
  st.plotly_chart(mapa_fig_comunas)
 
     # Gráfico de votos por comuna
- comunaxvoto = resultados.groupby('seccion_nombre')['votos_cantidad'].sum().sort_values(ascending=False)
+ 
  grafico_votos_comuna_fig = go.Figure(data=[go.Bar(x=comunaxvoto.index, y=comunaxvoto.values,  marker_color='violet')])
 
  grafico_votos_comuna_fig.update_layout(
