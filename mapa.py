@@ -367,8 +367,6 @@ st.image(logo_url, use_column_width='auto', output_format='PNG', width=100)
 # Crear un selector de pestañas
 tabs = st.selectbox("Seleccione una pestaña", ["Circuitos", "Comunas", "Ballotage"])
 
-tabs = st.selectbox("Seleccione una pestaña", ["Circuitos", "Comunas", "Ballotage"])
-
 if tabs == "Circuitos":
     st.subheader("Circuitos")
 
@@ -476,60 +474,3 @@ if tabs == "Circuitos":
 
     grafico_lineas_fig.update_layout(title="Porcentajes de Votos por Partido", xaxis_title="Circuito", yaxis_title="Porcentaje")
     st.plotly_chart(grafico_lineas_fig)
-
-elif tabs == "Comunas":
-    st.subheader("Comunas")
-
-    tipo_visualizacion = st.selectbox("Selecciona el tipo de visualización:", ['Votos', 'Porcentaje'])
-
-    # Función para crear los gráficos según la selección
-    def crear_graficos(tipo_visualizacion):
-        if tipo_visualizacion == 'Votos':
-            color_column = 'llaxvoto'
-            legend_name = 'Votos de LLA por Comuna'
-        else:
-            color_column = '%LLA'
-            legend_name = 'Porcentaje de LLA por Comuna'
-
-        # Mapa
-        mapa_fig_comunas = px.choropleth_mapbox(
-            resultados,
-            geojson=geojson_data,
-            locations='comuna_id',
-            featureidkey="properties.comuna",
-            color=color_column,
-            color_continuous_scale=[
-                (0.0, "red"),
-                (0.25, "orange"),
-                (0.5, "yellow"),
-                (0.75, "lightgreen"),
-                (1.0, "green"),
-            ],
-            range_color=(resultados[color_column].min(), resultados[color_column].max()),
-            labels={color_column: legend_name},
-            mapbox_style="open-street-map",
-            center={"lat": -34.6118, "lon": -58.3773},
-            zoom=10,
-            opacity=0.6,
-            title=f"{legend_name} por Comuna"
-        )
-
-        # Gráfico de comparación de votos por comuna
-        grafico_votos_comuna_fig = go.Figure(data=[
-            go.Bar(x=resultados['comuna_nombre'], y=resultados[color_column], marker_color='violet')
-        ])
-        grafico_votos_comuna_fig.update_layout(
-            title='Comparación de votos por comuna',
-            xaxis_title='Comuna',
-            yaxis_title='Votantes',
-            xaxis_tickangle=-90
-        )
-
-        return mapa_fig_comunas, grafico_votos_comuna_fig
-
-    # Crear gráficos solo después de seleccionar la opción
-    mapa_fig, grafico_votos_comuna_fig = crear_graficos(tipo_visualizacion)
-
-    # Mostrar gráficos
-    st.plotly_chart(mapa_fig)
-    st.plotly_chart(grafico_votos_comuna_fig)
