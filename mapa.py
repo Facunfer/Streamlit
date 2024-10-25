@@ -628,7 +628,7 @@ elif tabs == "Ballotage":
     st.subheader("Ballotage")
     
     # Permitir la selección de múltiples comunas con `multiselect`
-    capa_seleccionada = st.selectbox('Selecciona la Capa', ['Diferencia%LLA', 'llavotosbal'])
+    capa_seleccionada = st.selectbox('Selecciona la Capa', ['Crecimiento Porcentual', 'Crecimiento Votos'])
     comunas_seleccionadas = st.multiselect('Selecciona la(s) Comuna(s)', ['Todas las Comunas'] + resultadoscom['Comuna_x'].unique().tolist(), default='Todas las Comunas')
 
     # Filtrar los datos según las comunas seleccionadas
@@ -638,7 +638,7 @@ elif tabs == "Ballotage":
         resultados_filtrados1 = resultadoscom[resultadoscom['Comuna_x'].isin(comunas_seleccionadas)]
 
     # Determinar la columna adecuada según la capa seleccionada
-    if capa_seleccionada == 'llavotosbal':
+    if capa_seleccionada == 'Crecimiento Votos':
         color_column = 'llavotosbal'
         legend_name = 'Votos LLA Ballotage'
     else:
