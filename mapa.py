@@ -623,3 +623,142 @@ elif tabs == "Comunas":
 
  fig_tres_lineas.update_layout(height=900, title="Comparación de Porcentajes por Sección")
  st.plotly_chart(fig_tres_lineas)
+
+elif tabs == "Ballotage":
+ st.subheader("Ballotage")
+ capa_seleccionada = st.selectbox('Selecciona la Capa', ['Diferencia%LLA', 'llavotosbal'])
+ comuna_seleccionada = st.selectbox('Selecciona la Comuna', ['Todas las Comunas'] + resultadoscom['Comuna_x'].unique().tolist())
+
+    # Filtrar los datos según la comuna seleccionada
+ if comuna_seleccionada == "Todas las Comunas":
+        resultados_filtrados1 = resultadoscom
+ else:
+        resultados_filtrados1 = resultadoscom[resultadoscom['Comuna_x'] == comuna_seleccionada]
+
+    # Determinar la columna adecuada según la capa seleccionada
+ if capa_seleccionada == 'llavotosbal':
+        color_column = 'llavotosbal'
+        legend_name = 'Votos LLA Ballotage'
+ else:
+        color_column = 'Diferencia%LLA'
+        legend_name = 'Diferencia % LLA'
+
+    # Escala de color para el mapa
+ color_continuous_scale = [
+        (0.0, "red"),
+        (0.25, "orange"),
+        (0.5, "yellow"),
+        (0.75, "lightgreen"),
+        (1.0, "green"),
+    ]
+
+    # Crear el mapa coroplético
+ mapa_fig = px.choropleth_mapbox(
+        resultados_filtrados1,
+        geojson=geojson_merged,
+        locations='circuitomapa',
+        featureidkey="properties.circuitomapa",
+        color=color_column,
+        color_continuous_scale=color_continuous_scale,
+        range_color=(resultados_filtrados1[color_column].min(), resultados_filtrados1[color_column].max()),
+        mapbox_style="open-street-map",
+        center={"lat": -34.6118, "lon": -58.3773},
+        zoom=10,
+        opacity=0.6,
+        labels={color_column: legend_name},
+        title=f"{legend_name} - {comuna_seleccionada}"
+    )
+
+ mapa_fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
+ st.plotly_chart(mapa_fig)
+
+    # Gráfico de barras 1: Circuitos con mayor crecimiento
+ grafico_votos_totales11_fig = px.bar(
+        resultados_filtrados1.sort_values(by='DiferenciavotosLLA', ascending=False).head(20),
+        x='circuito_nombre',
+        y='DiferenciavotosLLA',
+        title='Circuitos con Mayor Crecimiento',
+        color_discrete_sequence=['#4B0082'],
+        template='plotly_white'
+    )
+ st.plotly_chart(grafico_votos_totales11_fig)
+
+    # Gráfico de barras 2: Circuitos con mayor crecimiento porcentual
+ grafico_votos_totales12_fig = px.bar(
+        resultados_filtrados1.sort_values(by='Diferencia%LLA', ascending=False).head(20),
+        x='circuito_nombre',
+        y='Diferencia%LLA',
+        title='Circuitos con Mayor Crecimiento Porcentual',
+        color_discrete_sequence=['#4B0082'],
+        template='plotly_white'
+    )
+ st.plotly_chart(grafico_votos_totales12_fig)
+
+    # Gráfico de líneas: Comparación % entre elecciones generales y ballotage
+ grafico_lineas_fig = go.Figure()
+
+ grafico_lineas_fig.add_trace(go.Scatter(
+        x=resultados_filtrados1['circuito_nombre'],
+        y=resultados_filtrados1['%LLAgen'],
+        mode='lines+markers',
+        name='% LLA General',
+        line=dict(color='violet')
+    ))
+
+ grafico_lineas_fig.add_trace(go.Scatter(
+        x=resultados_filtrados1['circuito_nombre'],
+        y=resultados_filtrados1['%UXPgen'],
+        mode='lines+markers',
+        name='% UXP General',
+        line=dict(color='blue')
+    ))
+
+ grafico_lineas_fig.add_trace(go.Scatter(
+        x=resultados_filtrados1['circuito_nombre'],
+        y=resultados_filtrados1['%LLAbal'],
+        mode='lines+markers',
+        name='% LLA Ballotage',
+        line=dict(color='darkviolet')
+    ))
+
+ grafico_lineas_fig.add_trace(go.Scatter(
+        x=resultados_filtrados1['circuito_nombre'],
+        y=resultados_filtrados1['%UXPbal'],
+        mode='lines+markers',
+        name='% UXP Ballotage',
+        line=dict(color='darkblue')
+    ))
+
+ grafico_lineas_fig.update_layout(
+        title='Comparación de % entre Elecciones Generales y Ballotage',
+        xaxis_title='Circuito',
+        yaxis_title='Porcentaje',
+        template='plotly_white'
+    )
+ st.plotly_chart(grafico_lineas_fig)
+
+    # Gráfico con promedio de Diferencia%LLA
+ promedio_diferencia_lla = resultados_filtrados1['Diferencia%LLA'].mean()
+ grafico_promedio_fig = go.Figure()
+
+ grafico_promedio_fig.add_trace(go.Scatter(
+        x=resultados_filtrados1['circuito_nombre'],
+        y=resultados_filtrados1['Diferencia%LLA'],
+        mode='lines+markers',
+        name='Diferencia%LLA',
+        marker=dict(color='violet', size=8)
+    ))
+
+ grafico_promedio_fig.add_shape(type='line',
+                                   x0=0, y0=promedio_diferencia_lla,
+                                   x1=len(resultados_filtrados1['circuito_nombre']),
+                                   y1=promedio_diferencia_lla,
+                                   line=dict(color='blue', dash='dash'))
+
+ grafico_promedio_fig.update_layout(
+        title='Diferencia % LLA por Circuito con Promedio',
+        xaxis_title='Circuito',
+        yaxis_title='Diferencia % LLA',
+        template='plotly_white'
+    )
+ st.plotly_chart(grafico_promedio_fig)
