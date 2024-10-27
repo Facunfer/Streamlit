@@ -861,13 +861,34 @@ elif tabs == "Asociaciones":
         ['Votos', 'Porcentaje']
     )
 
-    # Filtrar los datos en función de las comunas seleccionadas
+    # Selector para capas de puntos
+    capa_puntos = st.selectbox(
+        'Selecciona una capa de puntos',
+        options=[
+            'Ver todos los puntos',
+            'Centros de Jubilados',
+            'Clubes',
+            'Espacios Culturales',
+            'culto'
+        ],
+        index=0
+    )
+
+    # Filtrar los datos según las comunas seleccionadas
     if 'Todas las Comunas' in comunas_seleccionadas:
         resultados_filtrados = resultados2
+        cdj_filtrados = cdj
+        cdj2_filtrados = clubes
+        ec_filtrados = espaciosculturales
+        culto_fil = culto
     else:
         resultados_filtrados = resultados2[resultados2['comuna_id'].isin(comunas_seleccionadas)]
+        cdj_filtrados = cdj[cdj['comuna_id'].isin(comunas_seleccionadas)]
+        cdj2_filtrados = clubes[clubes['comuna_id'].isin(comunas_seleccionadas)]
+        ec_filtrados = espaciosculturales[espaciosculturales['comuna_id'].isin(comunas_seleccionadas)]
+        culto_fil = culto[culto['comuna_id'].isin(comunas_seleccionadas)]
 
-    # Determinar la columna de color y la leyenda según el tipo de capa seleccionado
+    # Determinar la columna de color y la leyenda según el tipo de capa seleccionada
     if tipo_capa == 'Votos':
         color_column = 'llavotos'
         legend_name = 'Votos de LLA por Comuna'
@@ -884,7 +905,7 @@ elif tabs == "Asociaciones":
         (1.0, "green"),
     ]
 
-    # Crear el mapa de coropletas
+    # Crear el mapa de coropletas sin indicador de color
     mapa_fig = px.choropleth_mapbox(
         resultados_filtrados,
         geojson=geojson_merged,
@@ -900,6 +921,61 @@ elif tabs == "Asociaciones":
         zoom=12,
         opacity=0.6
     )
+    mapa_fig.update_coloraxes(showscale=False)  # Ocultar indicador de escala de color
+    mapa_fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
+
+    # Añadir capas de puntos según la selección del usuario
+    if capa_puntos in ['Centros de Jubilados', 'Ver todos los puntos']:
+        mapa_fig.add_trace(go.Scattermapbox(
+            lat=cdj_filtrados['lat'],
+            lon=cdj_filtrados['long'],
+            mode='markers',
+            marker=go.scattermapbox.Marker(
+                size=10,
+                color="blue"
+            ),
+            text=cdj_filtrados[['nombre_centro', "calle", "altura", "barrio"]],
+            hoverinfo='text'
+        ))
+
+    if capa_puntos in ['Clubes', 'Ver todos los puntos']:
+        mapa_fig.add_trace(go.Scattermapbox(
+            lat=cdj2_filtrados['lat'],
+            lon=cdj2_filtrados['long'],
+            mode='markers',
+            marker=go.scattermapbox.Marker(
+                size=10,
+                color="green"
+            ),
+            text=cdj2_filtrados[['nombre', "tipo", "direccion", "telefono", "e_mail", "web", "barrio"]],
+            hoverinfo='text'
+        ))
+
+    if capa_puntos in ['Espacios Culturales', 'Ver todos los puntos']:
+        mapa_fig.add_trace(go.Scattermapbox(
+            lat=ec_filtrados['LATITUD'],
+            lon=ec_filtrados['LONGITUD'],
+            mode='markers',
+            marker=go.scattermapbox.Marker(
+                size=10,
+                color="pink"
+            ),
+            text=ec_filtrados[['ESTABLECIMIENTO', "FUNCION_PRINCIPAL", "DIRECCION", "BARRIO", "TELEFONO", "MAIL", "WEB", "INSTAGRAM"]],
+            hoverinfo='text'
+        ))
+
+    if capa_puntos in ['culto', 'Ver todos los puntos']:
+        mapa_fig.add_trace(go.Scattermapbox(
+            lat=culto_fil['lat'],
+            lon=culto_fil['long'],
+            mode='markers',
+            marker=go.scattermapbox.Marker(
+                size=10,
+                color="red"
+            ),
+            text=culto_fil[['culto', "nombre_institucion", "domicilio", "barrio"]],
+            hoverinfo='text'
+        ))
 
     # Mostrar el mapa en Streamlit
     st.plotly_chart(mapa_fig)
