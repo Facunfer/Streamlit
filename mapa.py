@@ -346,10 +346,10 @@ mapa_fig_comunas12 = px.choropleth_mapbox(
         opacity=0.6
        )
 #-------------------------------------------------------------------------------------------------------
-cdj = pd.read_csv('https://raw.githubusercontent.com/Facunfer/Streamlit/refs/heads/main/CENTROS%20DE%20JUBILADOS%20-%20centros-de-jubilados-reempadronados.csv')
+cdj = pd.read_csv('https://raw.githubusercontent.com/Facunfer/Streamlit/refs/heads/main/CENTROS%20DE%20JUBILADOS%20-%20centros-de-jubilados-reempadronados%20(1).csv')
 clubes = pd.read_csv('https://raw.githubusercontent.com/Facunfer/Streamlit/refs/heads/main/CLUBES%20-%20clubes%20(1).csv')
 espaciosculturales = pd.read_csv('https://raw.githubusercontent.com/Facunfer/Streamlit/refs/heads/main/Espacios%20Culturales%20-%20Hoja%201%20(1).csv')
-culto = pd.read_csv("https://raw.githubusercontent.com/Facunfer/Streamlit/refs/heads/main/ESPACIOS%20DE%20CULTO%20-%20lugares-de-culto.csv")
+culto = pd.read_csv("https://raw.githubusercontent.com/Facunfer/Streamlit/refs/heads/main/ESPACIOS%20DE%20CULTO%20-%20lugares-de-culto%20(1).csv")
 
 cdj = cdj.dropna(subset=["long"], axis=0)
 
