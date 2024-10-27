@@ -409,7 +409,6 @@ espaciosculturales.info()
 
 
 #culto
-culto = pd.read_csv('/content/lugares-de-culto.csv')
 culto = culto.dropna(subset=["long"], axis=0)
 culto['cgpc'] = pd.to_numeric(culto['cgpc'], errors='coerce')
 culto = culto.dropna(subset=["cgpc"], axis=0)
