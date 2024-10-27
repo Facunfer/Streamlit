@@ -935,7 +935,8 @@ elif tabs == "Asociaciones":
                 color="blue"
             ),
             text=cdj_filtrados[['nombre_centro', "calle", "altura", "barrio"]],
-            hoverinfo='text'
+            hoverinfo='text',
+            showlegend=False  # Desactiva el indicador de escala en puntos
         ))
 
     if capa_puntos in ['Clubes', 'Ver todos los puntos']:
@@ -948,7 +949,8 @@ elif tabs == "Asociaciones":
                 color="green"
             ),
             text=cdj2_filtrados[['nombre', "tipo", "direccion", "telefono", "e_mail", "web", "barrio"]],
-            hoverinfo='text'
+            hoverinfo='text',
+            showlegend=False
         ))
 
     if capa_puntos in ['Espacios Culturales', 'Ver todos los puntos']:
@@ -961,7 +963,8 @@ elif tabs == "Asociaciones":
                 color="pink"
             ),
             text=ec_filtrados[['ESTABLECIMIENTO', "FUNCION_PRINCIPAL", "DIRECCION", "BARRIO", "TELEFONO", "MAIL", "WEB", "INSTAGRAM"]],
-            hoverinfo='text'
+            hoverinfo='text',
+            showlegend=False
         ))
 
     if capa_puntos in ['culto', 'Ver todos los puntos']:
@@ -974,8 +977,22 @@ elif tabs == "Asociaciones":
                 color="red"
             ),
             text=culto_fil[['culto', "nombre_institucion", "domicilio", "barrio"]],
-            hoverinfo='text'
+            hoverinfo='text',
+            showlegend=False
         ))
 
     # Mostrar el mapa en Streamlit
     st.plotly_chart(mapa_fig)
+
+    # Mostrar las tablas debajo del mapa, filtradas según la comuna seleccionada
+    st.write("### Centros de Jubilados")
+    st.write(cdj_filtrados)
+
+    st.write("### Clubes")
+    st.write(cdj2_filtrados)
+
+    st.write("### Espacios Culturales")
+    st.write(ec_filtrados)
+
+    st.write("### Espacios de Culto")
+    st.write(culto_fil)
