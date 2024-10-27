@@ -345,9 +345,92 @@ mapa_fig_comunas12 = px.choropleth_mapbox(
         zoom=10,
         opacity=0.6
        )
+#-------------------------------------------------------------------------------------------------------
+cdj = pd.read_csv('https://raw.githubusercontent.com/Facunfer/Streamlit/refs/heads/main/CENTROS%20DE%20JUBILADOS%20-%20centros-de-jubilados-reempadronados.csv')
+clubes = pd.read_csv('https://raw.githubusercontent.com/Facunfer/Streamlit/refs/heads/main/CLUBES%20-%20clubes%20(1).csv')
+espaciosculturales = pd.read_csv('https://raw.githubusercontent.com/Facunfer/Streamlit/refs/heads/main/Espacios%20Culturales%20-%20Hoja%201%20(1).csv')
+culto = pd.read_csv("https://raw.githubusercontent.com/Facunfer/Streamlit/refs/heads/main/ESPACIOS%20DE%20CULTO%20-%20lugares-de-culto.csv")
+
+cdj = cdj.dropna(subset=["long"], axis=0)
+
+
+def agregar1(comuna):
+    numero = int(comuna)
+    if numero < 10:
+        return f'00{comuna}'
+    else:
+        return f'0{comuna}'
+
+cdj['comuna_id'] = cdj['comuna'].apply(agregar1)
+
+
+clubes['N'] = clubes['comuna'].str.extract('(\d+)')
+
+#los paso a num
+clubes["long"]=pd.to_numeric(clubes["long"], errors='coerce')
+clubes["lat"]=pd.to_numeric(clubes["lat"], errors='coerce')
+
+
+clubes = clubes.dropna(subset=["long"], axis=0)
+
+def agregar11(c):
+    numero = int(c)
+    if numero < 10:
+        return f'00{c}'
+    else:
+        return f'0{c}'
+
+clubes['comuna_id'] = clubes['N'].apply(agregar11)
 
 
 
+
+espaciosculturales['C'] = espaciosculturales['COMUNA'].str.extract('(\d+)')
+
+
+espaciosculturales= espaciosculturales.dropna(subset=["LATITUD"], axis=0)
+espaciosculturales= espaciosculturales.dropna(subset=["C"], axis=0)
+
+espaciosculturales["C"]=pd.to_numeric(espaciosculturales["C"], errors='coerce')
+espaciosculturales["LATITUD"]=pd.to_numeric(espaciosculturales["LATITUD"], errors='coerce')
+espaciosculturales["LONGITUD"]=pd.to_numeric(espaciosculturales["LONGITUD"], errors='coerce')
+
+def agregar111(C):
+    numero = int(C)
+    if numero < 10:
+        return f'00{C}'
+    else:
+        return f'0{C}'
+
+espaciosculturales['comuna_id'] = espaciosculturales['C'].apply(agregar111)
+
+espaciosculturales.info()
+
+
+
+#culto
+culto = pd.read_csv('/content/lugares-de-culto.csv')
+culto = culto.dropna(subset=["long"], axis=0)
+culto['cgpc'] = pd.to_numeric(culto['cgpc'], errors='coerce')
+culto = culto.dropna(subset=["cgpc"], axis=0)
+culto['cgpc']=culto['cgpc'].fillna(0).astype(int)
+
+def agregar22(cgpc):
+    numero = int(cgpc)
+    if numero < 10:
+        return f'00{cgpc}'
+    else:
+        return f'0{cgpc}'
+
+culto['comuna_id'] = culto['cgpc'].apply(agregar22)
+
+
+
+
+
+
+
+#--------------------------------------------------------------------------------------------------------
 st.markdown(
     """
     <style>
@@ -366,7 +449,7 @@ logo_url = "https://lalibertadavanza.com.ar/_next/image?url=%2F_next%2Fstatic%2F
 st.image(logo_url, use_column_width='auto', output_format='PNG', width=100)
 
 # Crear un selector de pestañas
-tabs = st.selectbox("Seleccione una pestaña", ["Circuitos", "Comunas", "Ballotage"])
+tabs = st.selectbox("Seleccione una pestaña", ["Circuitos", "Comunas", "Ballotage","Asociaciones"])
 
 if tabs == "Circuitos":
     st.subheader("Circuitos")
@@ -764,3 +847,6 @@ elif tabs == "Ballotage":
         template='plotly_white'
     )
     st.plotly_chart(grafico_promedio_fig)
+    
+elif tabs == "Asociaciones":
+    st.subheader("Asociaciones")
