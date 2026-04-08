@@ -192,7 +192,7 @@ resultados2['comuna_id'] = resultados2['comuna_id'].apply(agregar)
 
 
 
-geojson="https://raw.githubusercontent.com/tartagalensis/circuitos_electorales_AR/main/geojson/CABA.geojson"
+geojson="http://datar.info//dataset/fc99d6a8-9b47-4e9e-9436-58038735a5eb/resource/c836bb95-4e4e-4b33-8578-057175748d89/download/circuitoselectoralescaba.json"
 response = requests.get(geojson)
 geojson_data1 = response.json()
 
