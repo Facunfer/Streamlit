@@ -197,6 +197,8 @@ response = requests.get(geojson)
 geojson_data1 = response.json()
 
 gdf = gpd.GeoDataFrame.from_features(geojson_data1['features'])
+gdf['id_circuit'] = gdf['id_circuit'].astype(str)
+resultados2['circuitomapa'] = resultados2['circuitomapa'].astype(str)
 merged_data = gdf.merge(resultados2, left_on='id_circuit', right_on='circuitomapa')
 geojson_merged = json.loads(merged_data.to_json())
 
