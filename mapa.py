@@ -197,9 +197,10 @@ response = requests.get(geojson)
 geojson_data1 = response.json()
 
 gdf = gpd.GeoDataFrame.from_features(geojson_data1['features'])
-gdf['id_circuit'] = gdf['id_circuit'].astype(str)
-resultados2['circuitomapa'] = resultados2['circuitomapa'].astype(str)
-merged_data = gdf.merge(resultados2, left_on='id_circuit', right_on='circuitomapa')
+# Convertir ambos a entero para que el merge funcione
+gdf['id_circuit'] = gdf['id_circuit'].astype(int)
+resultados2['circuito_num'] = resultados2['circuito_nombre'].astype(int)
+merged_data = gdf.merge(resultados2, left_on='id_circuit', right_on='circuito_num')
 geojson_merged = json.loads(merged_data.to_json())
 
 
@@ -322,7 +323,7 @@ def agregar_ceros(circuito_nombre):
     else:                   # Tres dígitos
         return f'00{circuito_nombre}'
 
-resultadoscom['circuitomapa'] = resultadoscom['circuito_nombre'].apply(agregar_ceros)
+resultadoscom['circuito_num'] = resultadoscom['circuito_nombre'].astype(int)
 
 
 
@@ -337,8 +338,8 @@ color_continuous_scale = [
 mapa_fig_comunas12 = px.choropleth_mapbox(
        resultadoscom,
         geojson=geojson_merged,
-        locations='circuitomapa',
-        featureidkey="properties.circuitomapa",
+        locations='circuito_num',
+        featureidkey="properties.circuito_num",
         color='Diferencia%LLA',
         color_continuous_scale=color_continuous_scale,
         range_color=(resultadoscom["Diferencia%LLA"].min(), resultadoscom["Diferencia%LLA"].max()),  # Cambiado a color_column1
@@ -485,8 +486,8 @@ if tabs == "Circuitos":
     mapa_fig = px.choropleth_mapbox(
         resultados_filtrados,
         geojson=geojson_merged,
-        locations='circuitomapa',
-        featureidkey="properties.circuitomapa",
+        locations='circuito_num',
+        featureidkey="properties.circuito_num",
         color=color_column,
         color_continuous_scale=color_continuous_scale,
         range_color=(resultados_filtrados[color_column].min(), resultados_filtrados[color_column].max()),
@@ -742,8 +743,8 @@ elif tabs == "Ballotage":
     mapa_fig = px.choropleth_mapbox(
         resultados_filtrados1,
         geojson=geojson_merged,
-        locations='circuitomapa',
-        featureidkey="properties.circuitomapa",
+        locations='circuito_num',
+        featureidkey="properties.circuito_num",
         color=color_column,
         color_continuous_scale=color_continuous_scale,
         range_color=(resultados_filtrados1[color_column].min(), resultados_filtrados1[color_column].max()),
@@ -911,8 +912,8 @@ elif tabs == "Asociaciones":
     mapa_fig = px.choropleth_mapbox(
         resultados_filtrados,
         geojson=geojson_merged,
-        locations='circuitomapa',
-        featureidkey="properties.circuitomapa",
+        locations='circuito_num',
+        featureidkey="properties.circuito_num",
         color=color_column,
         color_continuous_scale=color_continuous_scale,
         range_color=(resultados_filtrados[color_column].min(), resultados_filtrados[color_column].max()),
